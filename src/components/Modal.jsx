@@ -1,42 +1,45 @@
 import React, { useState } from "react";
+import { useForm } from "../hooks/useForm";
 import cerrarmodal from "../img/cerrar.svg";
 import { Mensaje } from "./Mensaje";
 
+const initialForm = {
+  nombre: "",
+  cantidad: "",
+  categoria: "",
+};
+
+const validateForm = (valueFormModal) => {
+  let errors = {};
+  let regexName = /^[A-Za-zÑñÁáÉéÍíÓóÚúÜü\s]+$/;
+
+  if (!valueFormModal.nombre.trim()) {
+    errors.nombre = "El campo 'Nombre' es requerido";
+  } else if (!regexName.test(valueFormModal.nombre.trim())) {
+    errors.nombre = "El campo 'Nombre' solo acepta letras y espacios en blanco";
+  }
+
+  if (!valueFormModal.cantidad.trim()) {
+    errors.cantidad = "El campo 'Cantidad' es requerido";
+  } else if (!Number(valueFormModal.cantidad)) {
+    errors.cantidad = "El campo 'Cantidad' tiene que ser un numero";
+  }
+
+  if (!valueFormModal.categoria.trim()) {
+    errors.categoria = "El campo 'Categoria' es requerido";
+  }
+
+  return errors;
+};
+
 export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
-  const [mensajeErrorForm, setMensajeErrorForm] = useState("");
-  const [ValueFormModal, setValueFormModal] = useState({
-    nombre: "",
-    cantidad: "",
-    categoria: "",
-  });
-
-  const handleInputChange = ({ target }) => {
-    const { value, name } = target;
-    setValueFormModal({
-      ...ValueFormModal,
-      [name]: value,
-    });
-  };
-
-  const handleSubmitFormModal = (e) => {
-    e.preventDefault();
-    console.log("Enviando informacion...", ValueFormModal);
-    if (
-      [
-        ValueFormModal.nombre,
-        ValueFormModal.cantidad,
-        ValueFormModal.categoria,
-      ].includes("")
-    ) {
-      setMensajeErrorForm("Todos los campos son requeridos");
-      return;
-    }
-    setValueFormModal({
-      nombre: "",
-      cantidad: "",
-      categoria: "",
-    });
-  };
+  const {
+    valueFormModal,
+    error,
+    handleInputChange,
+    handleSubmitFormModal,
+    handleInputBlur,
+  } = useForm(initialForm, validateForm);
 
   const ocultarModal = () => {
     setAnimarModal(false);
@@ -55,28 +58,32 @@ export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
         className={`formulario ${animarModal ? "animar" : "cerrar"}`}
       >
         <legend>Nuevo Gasto</legend>
-        {mensajeErrorForm && <Mensaje tipo="error">{mensajeErrorForm}</Mensaje>}
+
         <div className="campo">
           <label htmlFor="nombre">Nombre Gasto</label>
           <input
             name="nombre"
-            value={ValueFormModal.nombre}
+            value={valueFormModal.nombre}
             onChange={handleInputChange}
+            onBlur={handleInputBlur}
             id="nombre"
             type="text"
             placeholder="Añade el nombre del Gasto"
           />
+          {error.nombre && <Mensaje tipo="error">{error.nombre}</Mensaje>}
         </div>
         <div className="campo">
           <label htmlFor="cantidad">Cantidad</label>
           <input
             name="cantidad"
-            value={ValueFormModal.cantidad}
+            value={valueFormModal.cantidad}
             onChange={handleInputChange}
+            onBlur={handleInputBlur}
             id="cantidad"
             type="text"
             placeholder="Añade la cantidad del gasto: ej. 300"
           />
+          {error.cantidad && <Mensaje tipo="error">{error.cantidad}</Mensaje>}
         </div>
         <div className="campo">
           <label htmlFor="categoria">Cantidad</label>
@@ -84,7 +91,8 @@ export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
             id="categoria"
             name="categoria"
             onChange={handleInputChange}
-            value={ValueFormModal.categoria}
+            value={valueFormModal.categoria}
+            onBlur={handleInputBlur}
           >
             <option value="">-- Selecciones --</option>
             <option value="ahorro">Ahorro</option>
@@ -95,6 +103,7 @@ export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
             <option value="salud">Salud</option>
             <option value="suscripciones">Suscripciones</option>
           </select>
+          {error.categoria && <Mensaje tipo="error">{error.categoria}</Mensaje>}
         </div>
         <input type="submit" value="Añadir Gastos" />
       </form>
