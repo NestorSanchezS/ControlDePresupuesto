@@ -15,12 +15,6 @@ export const useForm = (initialForm, validateForm) => {
   const handleSubmitFormModal = (e) => {
     e.preventDefault();
     setError(validateForm(valueFormModal));
-
-    if (Object.keys(error).length === 0) {
-      console.log("Enviando informacion", valueFormModal);
-    } else {
-      return;
-    }
     setValueFormModal(initialForm);
   };
 
@@ -35,5 +29,6 @@ export const useForm = (initialForm, validateForm) => {
     handleInputChange,
     handleSubmitFormModal,
     handleInputBlur,
+    setValueFormModal,
   };
 };

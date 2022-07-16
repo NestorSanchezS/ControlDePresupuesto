@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "../hooks/useForm";
 import cerrarmodal from "../img/cerrar.svg";
 import { Mensaje } from "./Mensaje";
+import { generarId } from "../helpers";
 
 const initialForm = {
   nombre: "",
@@ -32,16 +33,46 @@ const validateForm = (valueFormModal) => {
   return errors;
 };
 
-export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
+export const Modal = ({
+  setModal,
+  animarModal,
+  setAnimarModal,
+  valueGastos,
+  setValueGastos,
+  gastoEditar,
+}) => {
   const {
     valueFormModal,
     error,
     handleInputChange,
     handleSubmitFormModal,
     handleInputBlur,
+    setValueFormModal,
   } = useForm(initialForm, validateForm);
 
+  //Para que aparezca la info a gastar en el formulario
+  useEffect(() => {
+    if (Object.keys(gastoEditar).length > 0) {
+      setValueFormModal(gastoEditar);
+    }
+  }, []);
+
   const ocultarModal = () => {
+    setAnimarModal(false);
+    setTimeout(() => {
+      setModal(false);
+    }, 500);
+  };
+
+  const guardarGastos = (gasto) => {
+    gasto.id = generarId();
+    gasto.fecha = Date.now();
+    setValueGastos([...valueGastos, gasto]);
+  };
+
+  const hanldeSubmitFormModalAndCloseModal = (e) => {
+    handleSubmitFormModal(e);
+    guardarGastos(valueFormModal);
     setAnimarModal(false);
     setTimeout(() => {
       setModal(false);
@@ -54,10 +85,10 @@ export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
         <img src={cerrarmodal} alt="Cerra modal" onClick={ocultarModal} />
       </div>
       <form
-        onSubmit={handleSubmitFormModal}
+        onSubmit={hanldeSubmitFormModalAndCloseModal}
         className={`formulario ${animarModal ? "animar" : "cerrar"}`}
       >
-        <legend>Nuevo Gasto</legend>
+        <legend>{gastoEditar.id ? "Actulizar Gasto" : "Nuevo Gasto"}</legend>
 
         <div className="campo">
           <label htmlFor="nombre">Nombre Gasto</label>
@@ -105,7 +136,10 @@ export const Modal = ({ setModal, animarModal, setAnimarModal }) => {
           </select>
           {error.categoria && <Mensaje tipo="error">{error.categoria}</Mensaje>}
         </div>
-        <input type="submit" value="Añadir Gastos" />
+        <input
+          type="submit"
+          value={gastoEditar.id ? "Editar Gasto" : "Añadir Gasto"}
+        />
       </form>
     </div>
   );

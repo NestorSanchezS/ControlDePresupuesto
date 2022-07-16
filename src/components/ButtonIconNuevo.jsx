@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import IconoNuevoGasto from "../img/nuevo-gasto.svg";
 
-export const ButtonIconNuevo = ({ setModal, setAnimarModal }) => {
+export const ButtonIconNuevo = ({
+  setModal,
+  setAnimarModal,
+  setGastoEditar,
+}) => {
   const handleNuevoGasto = () => {
     setModal(true);
+    setGastoEditar({});
     setTimeout(() => {
       setAnimarModal(true);
     }, 500);

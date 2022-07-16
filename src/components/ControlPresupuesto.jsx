@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export const ControlPresupuesto = ({ presupuesto }) => {
+export const ControlPresupuesto = ({ presupuesto, valueGastos }) => {
+  const [disponible, setDisponible] = useState(0);
+  const [gastado, setGastado] = useState(0);
+  useEffect(() => {
+    const totalGastado = valueGastos.reduce(
+      (totalAcomulado, valueGasto) =>
+        Number(valueGasto.cantidad) + Number(totalAcomulado),
+      0
+    );
+    setGastado(totalGastado);
+
+    const totalRestante = presupuesto - totalGastado;
+    setDisponible(totalRestante);
+
+    if (totalGastado > totalRestante) {
+      console.log("Te gastaste todo el presupuesto");
+    }
+  }, [valueGastos]);
+
   const formatearCantidad = (cantidad) => {
     return cantidad.toLocaleString("en-US", {
       style: "currency",
@@ -20,11 +38,11 @@ export const ControlPresupuesto = ({ presupuesto }) => {
         </p>
         <p>
           <span>Disponible:</span>
-          {formatearCantidad(0)}
+          {formatearCantidad(disponible)}
         </p>
         <p>
           <span>Gastado:</span>
-          {formatearCantidad(0)}
+          {formatearCantidad(gastado)}
         </p>
       </div>
     </div>
