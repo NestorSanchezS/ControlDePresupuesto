@@ -4,7 +4,6 @@ import { Header } from "./components/Header";
 import { ButtonIconNuevo } from "./components/ButtonIconNuevo";
 import { Modal } from "./components/Modal";
 import { ListadoGastos } from "./components/ListadoGastos";
-import { useForm } from "./hooks/useForm";
 
 export const App = () => {
   const [presupuesto, setPresupuesto] = useState(0);

@@ -41,6 +41,7 @@ export const Modal = ({
   setValueGastos,
   gastoEditar,
 }) => {
+  const [id, setId] = useState("");
   const {
     valueFormModal,
     error,
@@ -54,6 +55,7 @@ export const Modal = ({
   useEffect(() => {
     if (Object.keys(gastoEditar).length > 0) {
       setValueFormModal(gastoEditar);
+      setId(gastoEditar.id);
     }
   }, []);
 
@@ -65,13 +67,23 @@ export const Modal = ({
   };
 
   const guardarGastos = (gasto) => {
-    gasto.id = generarId();
-    gasto.fecha = Date.now();
-    setValueGastos([...valueGastos, gasto]);
+    if (gasto.id) {
+      //Actulizar
+      const gastosActulizados = valueGastos.map((gastoState) =>
+        gastoState.id === gasto.id ? gasto : gastoState
+      );
+      setValueGastos(gastosActulizados);
+    } else {
+      //Nuevo Gasto
+      gasto.id = generarId();
+      gasto.fecha = Date.now();
+      setValueGastos([...valueGastos, gasto]);
+    }
   };
 
   const hanldeSubmitFormModalAndCloseModal = (e) => {
     handleSubmitFormModal(e);
+    valueFormModal.id = id;
     guardarGastos(valueFormModal);
     setAnimarModal(false);
     setTimeout(() => {
