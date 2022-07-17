@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { ButtonIconNuevo } from "./components/ButtonIconNuevo";
 import { Modal } from "./components/Modal";
 import { ListadoGastos } from "./components/ListadoGastos";
+import { Filtros } from "./components/Filtros";
 
 export const App = () => {
   const [presupuesto, setPresupuesto] = useState(
@@ -18,6 +19,8 @@ export const App = () => {
       : []
   );
   const [gastoEditar, setGastoEditar] = useState({});
+  const [filtro, setFiltro] = useState("");
+  const [gastosFiltrados, setGastosFiltrados] = useState([]);
 
   useEffect(() => {
     if (Object.keys(gastoEditar).length > 0) {
@@ -35,6 +38,15 @@ export const App = () => {
     );
     setValueGastos(valueGastosActulizados);
   };
+  //Para filtar
+  useEffect(() => {
+    if (filtro) {
+      const gastosFiltradosList = valueGastos.filter(
+        (gasto) => gasto.categoria === filtro
+      );
+      setGastosFiltrados(gastosFiltradosList);
+    }
+  }, [filtro]);
 
   useEffect(() => {
     localStorage.setItem("presupuesto", presupuesto ?? 0);
@@ -63,10 +75,14 @@ export const App = () => {
       {isValidPresupuesto && (
         <>
           <main>
+            <Filtros filtro={filtro} setFiltro={setFiltro} />
+
             <ListadoGastos
               valueGastos={valueGastos}
               setGastoEditar={setGastoEditar}
               onDeleteGasto={onDeleteGasto}
+              filtro={filtro}
+              gastosFiltrados={gastosFiltrados}
             />
           </main>
           <ButtonIconNuevo
