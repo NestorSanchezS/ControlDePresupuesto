@@ -1,12 +1,21 @@
 import React from "react";
 import { Gasto } from "./Gasto";
 
-export const ListadoGastos = ({ valueGastos, setGastoEditar }) => {
+export const ListadoGastos = ({
+  valueGastos,
+  setGastoEditar,
+  onDeleteGasto,
+}) => {
   return (
     <div className="listado-gastos contenedor">
       <h2>{valueGastos.length ? "gastos" : "No hay gastos"}</h2>
       {valueGastos.map((value) => (
-        <Gasto value={value} key={value.id} setGastoEditar={setGastoEditar} />
+        <Gasto
+          value={value}
+          key={value.id}
+          setGastoEditar={setGastoEditar}
+          onDeleteGasto={onDeleteGasto}
+        />
       ))}
     </div>
   );

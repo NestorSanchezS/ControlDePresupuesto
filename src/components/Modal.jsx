@@ -40,6 +40,7 @@ export const Modal = ({
   valueGastos,
   setValueGastos,
   gastoEditar,
+  setGastoEditar,
 }) => {
   const [id, setId] = useState("");
   const {
@@ -61,6 +62,7 @@ export const Modal = ({
 
   const ocultarModal = () => {
     setAnimarModal(false);
+    setGastoEditar({});
     setTimeout(() => {
       setModal(false);
     }, 500);
@@ -73,6 +75,7 @@ export const Modal = ({
         gastoState.id === gasto.id ? gasto : gastoState
       );
       setValueGastos(gastosActulizados);
+      setGastoEditar({});
     } else {
       //Nuevo Gasto
       gasto.id = generarId();
