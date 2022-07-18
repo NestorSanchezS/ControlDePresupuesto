@@ -67,6 +67,7 @@ export const App = () => {
     <div className={modal ? "fijar" : ""}>
       <Header
         valueGastos={valueGastos}
+        setValueGastos={setValueGastos}
         presupuesto={presupuesto}
         setPresupuesto={setPresupuesto}
         isValidPresupuesto={isValidPresupuesto}

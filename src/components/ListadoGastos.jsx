@@ -10,17 +10,14 @@ export const ListadoGastos = ({
 }) => {
   return (
     <div className="listado-gastos contenedor">
-      <h2>{valueGastos.length ? "gastos" : "No hay gastos"}</h2>
-      {filtro
-        ? gastosFiltrados.map((value) => (
-            <Gasto
-              key={value.id}
-              value={value}
-              setGastoEditar={setGastoEditar}
-              onDeleteGasto={onDeleteGasto}
-            />
-          ))
-        : valueGastos.map((value) => (
+      {filtro ? (
+        <>
+          <h2>
+            {gastosFiltrados.length
+              ? "gastos"
+              : "No hay gastos en esta categoria"}
+          </h2>
+          {gastosFiltrados.map((value) => (
             <Gasto
               key={value.id}
               value={value}
@@ -28,6 +25,20 @@ export const ListadoGastos = ({
               onDeleteGasto={onDeleteGasto}
             />
           ))}
+        </>
+      ) : (
+        <>
+          {valueGastos.length ? "gastos" : "No hay gastos"}
+          {valueGastos.map((value) => (
+            <Gasto
+              key={value.id}
+              value={value}
+              setGastoEditar={setGastoEditar}
+              onDeleteGasto={onDeleteGasto}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 };
